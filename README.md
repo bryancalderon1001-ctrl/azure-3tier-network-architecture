@@ -29,12 +29,12 @@ graph TD
     AppVM -->|"Private Endpoint, port 443"| KV["Azure Key Vault<br/>RBAC, public access disabled"]
     AppVM -->|"Private Endpoint, port 1433"| SQL["Azure SQL Database<br/>Serverless, public access disabled"]
 
-    style Internet fill:#f9f9f9,stroke:#333
-    style LB fill:#cce5ff,stroke:#333
-    style WebVM fill:#d4edda,stroke:#333
-    style AppVM fill:#d4edda,stroke:#333
-    style KV fill:#fff3cd,stroke:#333
-    style SQL fill:#fff3cd,stroke:#333
+    style Internet fill:#f9f9f9,stroke:#333,color:#000
+    style LB fill:#cce5ff,stroke:#333,color:#000
+    style WebVM fill:#d4edda,stroke:#333,color:#000
+    style AppVM fill:#d4edda,stroke:#333,color:#000
+    style KV fill:#fff3cd,stroke:#333,color:#000
+    style SQL fill:#fff3cd,stroke:#333,color:#000
 ```
 
 **Design principle:** the Load Balancer is the only public IP in the entire architecture. Every other resource — both VMs, Key Vault, and SQL Database — has zero direct internet exposure. Each hop enforces its own network boundary via NSGs and Application Security Groups.
