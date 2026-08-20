@@ -31,3 +31,11 @@ variable "subnet_address_space" {
   }
   description = "Three subnets for 3-tier network architecture"
 }
+
+variable "sql_location" {
+  type        = string
+  default     = "West US 3"
+  description = "Exception to the US South Central Region"
+}
+
+
