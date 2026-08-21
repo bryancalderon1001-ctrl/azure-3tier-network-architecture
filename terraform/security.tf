@@ -34,14 +34,14 @@ resource "azurerm_network_security_group" "data" {
   resource_group_name = azurerm_resource_group.this.name
 }
 
-resource "azurerm_network_security_rule" "web_inbound_https" {
-  name                        = "Allow-HTTPS-Inbound"
+resource "azurerm_network_security_rule" "web_inbound_http" {
+  name                        = "Allow-HTTP-Inbound"
   priority                    = 100
   direction                   = "Inbound"
   access                      = "Allow"
   protocol                    = "Tcp"
   source_port_range           = "*"
-  destination_port_range      = "443"
+  destination_port_range      = "80"
   source_address_prefix       = "Internet"
   destination_address_prefix  = "*"
   resource_group_name         = azurerm_resource_group.this.name
