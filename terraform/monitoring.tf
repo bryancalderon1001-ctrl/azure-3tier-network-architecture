@@ -140,3 +140,68 @@ SecurityAlert
 | project TimeGenerated, AlertName, AlertSeverity, Description, CompromisedEntity
 QUERY
 }
+
+resource "random_uuid" "workbook" {
+}
+
+resource "azurerm_application_insights_workbook" "this" {
+  name                = random_uuid.workbook.result
+  resource_group_name = azurerm_resource_group.this.name
+  location            = var.location
+  display_name        = "App_Insigts_Workbook"
+  source_id           = lower(azurerm_log_analytics_workspace.this.id)
+  category            = "sentinel"
+
+  data_json = jsonencode({
+    version = "Notebook/1.0"
+    items = [
+      {
+        type    = 1
+        name    = "title"
+        content = { json = "# 3-Tier Lab Security Detections" }
+      },
+      {
+        type = 3
+        name = "nsg-changes"
+        content = {
+          version = "KqlItem/1.0"
+          title   = "NSG Rule Changes"
+          query   = <<QUERY
+AzureActivity
+| where OperationName == "Create or Update Security Rule"
+| where ActivityStatus == "Succeeded"
+| project TimeGenerated, Caller, OperationName, ResourceGroup, Resource
+QUERY
+        }
+      },
+      {
+        type = 3
+        name = "sql-failed-auth"
+        content = {
+          version = "KqlItem/1.0"
+          title   = "SQL Failed Authentication"
+          query   = <<QUERY
+AzureDiagnostics
+| where Category == "SQLSecurityAuditEvents"
+| where action_name_s == "DATABASE AUTHENTICATION FAILED"
+| project TimeGenerated, server_principal_name_s, client_ip_s, database_name_s
+QUERY
+        }
+      },
+      {
+        type = 3
+        name = "defender-high-severity"
+        content = {
+          version = "KqlItem/1.0"
+          title   = "Defender for Cloud High-Severity Alerts"
+          query   = <<QUERY
+SecurityAlert
+| where AlertSeverity == "High"
+| project TimeGenerated, AlertName, AlertSeverity, Description, CompromisedEntity
+QUERY
+        }
+      }
+    ]
+    isLocked = false
+  })
+}
