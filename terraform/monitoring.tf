@@ -87,3 +87,56 @@ resource "azurerm_monitor_diagnostic_setting" "sql_audit" {
     category = "SQLSecurityAuditEvents"
   }
 }
+
+resource "azurerm_sentinel_alert_rule_scheduled" "nsg_change" {
+  name                       = "NSG_Change_Rule"
+  log_analytics_workspace_id = azurerm_sentinel_log_analytics_workspace_onboarding.this.workspace_id
+  display_name               = "NSG_Change"
+  severity                   = "High"
+  query_frequency            = "PT1H"
+  query_period               = "PT1H"
+  trigger_operator           = "GreaterThan"
+  trigger_threshold          = 0
+
+  query = <<QUERY
+AzureActivity
+| where OperationName == "Create or Update Security Rule"
+| where ActivityStatus == "Succeeded"
+| project TimeGenerated, Caller, OperationName, ResourceGroup, Resource
+QUERY
+}
+
+resource "azurerm_sentinel_alert_rule_scheduled" "sql_failed_auth" {
+  name                       = "SQL_Failed_AuthN"
+  log_analytics_workspace_id = azurerm_sentinel_log_analytics_workspace_onboarding.this.workspace_id
+  display_name               = "SQL_Fail"
+  severity                   = "Medium"
+  query_frequency            = "PT1H"
+  query_period               = "PT1H"
+  trigger_operator           = "GreaterThan"
+  trigger_threshold          = 0
+
+  query = <<QUERY
+AzureDiagnostics
+| where Category == "SQLSecurityAuditEvents"
+| where action_name_s == "DATABASE AUTHENTICATION FAILED"
+| project TimeGenerated, server_principal_name_s, client_ip_s, database_name_s
+QUERY
+}
+
+resource "azurerm_sentinel_alert_rule_scheduled" "defender_high_severity" {
+  name                       = "Def_Cloud_High_Severity"
+  log_analytics_workspace_id = azurerm_sentinel_log_analytics_workspace_onboarding.this.workspace_id
+  display_name               = "Defender_High_Severity"
+  severity                   = "High"
+  query_frequency            = "PT1H"
+  query_period               = "PT1H"
+  trigger_operator           = "GreaterThan"
+  trigger_threshold          = 0
+
+  query = <<QUERY
+SecurityAlert
+| where AlertSeverity == "High"
+| project TimeGenerated, AlertName, AlertSeverity, Description, CompromisedEntity
+QUERY
+}
