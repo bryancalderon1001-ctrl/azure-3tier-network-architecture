@@ -28,7 +28,7 @@ resource "azurerm_lb_probe" "this" {
   name            = "health_check_web"
   protocol        = "Http"
   port            = 80
-  request_path    = "/"
+  request_path    = "/health"
 }
 
 resource "azurerm_lb_rule" "this" {
