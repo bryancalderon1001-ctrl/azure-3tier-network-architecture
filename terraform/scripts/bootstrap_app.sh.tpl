@@ -9,7 +9,7 @@ curl https://packages.microsoft.com/config/ubuntu/24.04/prod.list | tee /etc/apt
 apt-get update
 ACCEPT_EULA=Y apt-get install -y msodbcsql18
 
-pip3 install --break-system-packages flask pyodbc azure-identity azure-keyvault-secrets
+pip3 install --break-system-packages --ignore-installed flask pyodbc azure-identity azure-keyvault-secrets
 
 mkdir -p /opt/app
 cat > /opt/app/app.py << 'PYEOF'
