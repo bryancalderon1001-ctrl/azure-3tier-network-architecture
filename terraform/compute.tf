@@ -15,10 +15,10 @@ resource "azurerm_network_interface_application_security_group_association" "app
 }
 
 resource "azurerm_linux_virtual_machine" "app" {
-  name                  = "vm_app"
+  name                  = "vm-app"
   location              = var.location
   resource_group_name   = azurerm_resource_group.this.name
-  size                  = "B2pts_v2"
+  size                  = "Standard_B2pts_v2"
   admin_username        = "azureuser"
   network_interface_ids = [
     azurerm_network_interface.app.id,
@@ -76,10 +76,10 @@ resource "azurerm_network_interface_application_security_group_association" "web
 }
 
 resource "azurerm_linux_virtual_machine" "web" {
-  name                  = "vm_web"
+  name                  = "vm-web"
   location              = var.location
   resource_group_name   = azurerm_resource_group.this.name
-  size                  = "B2pts_v2"
+  size                  = "Standard_B2pts_v2"
   admin_username        = "azureuser"
   network_interface_ids = [
     azurerm_network_interface.web.id

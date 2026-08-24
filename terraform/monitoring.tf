@@ -107,6 +107,8 @@ QUERY
 }
 
 resource "azurerm_sentinel_alert_rule_scheduled" "sql_failed_auth" {
+  count = 0
+
   name                       = "SQL_Failed_AuthN"
   log_analytics_workspace_id = azurerm_sentinel_log_analytics_workspace_onboarding.this.workspace_id
   display_name               = "SQL_Fail"
