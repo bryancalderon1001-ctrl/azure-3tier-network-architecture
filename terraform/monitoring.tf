@@ -71,3 +71,19 @@ resource "azurerm_network_watcher_flow_log" "this" {
     interval_in_minutes    = 60
   }
 }
+
+resource "azurerm_mssql_server_extended_auditing_policy" "this" {
+  server_id              = azurerm_mssql_server.this.id
+  log_monitoring_enabled = true
+  retention_in_days      = 30
+}
+
+resource "azurerm_monitor_diagnostic_setting" "sql_audit" {
+  name                       = "SQL_Monitor_Diagnostic_Setting"
+  target_resource_id         = azurerm_mssql_database.this.id
+  log_analytics_workspace_id = azurerm_sentinel_log_analytics_workspace_onboarding.this.workspace_id
+
+  enabled_log {
+    category = "SQLSecurityAuditEvents"
+  }
+}
