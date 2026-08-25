@@ -26,7 +26,7 @@ resource "azurerm_linux_virtual_machine" "app" {
 
   admin_ssh_key {
     username   = "azureuser"
-    public_key = file("/home/bc/.ssh/azure_3tierlab_iac.pub")
+    public_key = var.ssh_public_key
   }
   
   identity {
@@ -87,7 +87,7 @@ resource "azurerm_linux_virtual_machine" "web" {
 
   admin_ssh_key {
     username   = "azureuser"
-    public_key = file("/home/bc/.ssh/azure_3tierlab_iac.pub")
+    public_key = var.ssh_public_key
   }
 
   os_disk {

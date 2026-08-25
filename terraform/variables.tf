@@ -38,5 +38,10 @@ variable "sql_location" {
   description = "Exception to the US South Central Region"
 }
 
+variable "ssh_public_key" {
+  type        = string
+  default     = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIOM63sOP4VAO4833rZpvl1ssWbY21foU6FoyeMoShO// azure-3tier-iac-app"
+  description = "SSH public key for VM admin access"
+}
 
 # CI/CD pipeline test
