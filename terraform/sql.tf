@@ -10,12 +10,13 @@ resource "random_password" "sql_admin" {
 }
 
 resource "azurerm_mssql_server" "this" {
-  name                         = "sql-3tierlab-iac-${random_string.sql_suffix.result}"
-  resource_group_name          = azurerm_resource_group.this.name
-  location                     = var.sql_location
-  version                      = "12.0"
-  administrator_login          = "azureuser"
-  administrator_login_password = random_password.sql_admin.result
+  name                          = "sql-3tierlab-iac-${random_string.sql_suffix.result}"
+  resource_group_name           = azurerm_resource_group.this.name
+  location                      = var.sql_location
+  version                       = "12.0"
+  administrator_login           = "azureuser"
+  administrator_login_password  = random_password.sql_admin.result
+  public_network_access_enabled = false
 }
 
 resource "azurerm_key_vault_secret" "sql_admin_password" {

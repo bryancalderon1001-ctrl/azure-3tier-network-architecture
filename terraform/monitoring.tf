@@ -43,11 +43,12 @@ resource "random_string" "storage_suffix" {
 }
 
 resource "azurerm_storage_account" "flowlogs" {
-  name                     = "stflowlogs${random_string.storage_suffix.result}"
-  resource_group_name      = azurerm_resource_group.this.name
-  location                 = var.location
-  account_tier             = "Standard"
-  account_replication_type = "LRS"
+  name                            = "stflowlogs${random_string.storage_suffix.result}"
+  resource_group_name             = azurerm_resource_group.this.name
+  location                        = var.location
+  account_tier                    = "Standard"
+  account_replication_type        = "LRS"
+  allow_nested_items_to_be_public = false
 }
 
 resource "azurerm_network_watcher_flow_log" "this" {
