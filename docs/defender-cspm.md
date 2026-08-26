@@ -27,6 +27,10 @@ Two Medium findings were remediated directly in Terraform, mapped to the CIS Mic
 
 Both were verified two ways, not one: `terraform apply` reported the changes applied cleanly (`2 changed, 0 destroyed`), and Defender's own subsequent re-scan independently marked both findings **Completed** — two separate systems agreeing, not a single self-reported success taken at face value.
 
+![SQL public network access finding — independently confirmed Completed by Defender's re-scan](./images/defender-sql-remediated.png)
+
+![Storage account public access finding — independently confirmed Completed by Defender's re-scan](./images/defender-storage-remediated.png)
+
 ## A Finding Investigated and Deliberately Not Remediated
 
 Defender also flagged the flow-log storage account for disallowing shared-key (access-key) authentication. This was investigated rather than applied blindly: Microsoft's own documentation confirms that Azure Network Watcher's flow log delivery mechanism specifically depends on storage account key-based access to write data — disabling it would have broken an already-working, previously-verified telemetry pipeline. This finding is documented as a deliberate, informed trade-off rather than remediated, consistent with this project's standard of investigating before changing a working control.
